@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.21)
 
 project(offsetAllocator)
 
@@ -11,4 +11,9 @@ if(MSVC)
    target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
 else()
    target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+endif()
+
+if(PROJECT_IS_TOP_LEVEL)
+    enable_testing()
+    add_subdirectory(test)
 endif()
