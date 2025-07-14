@@ -3,13 +3,15 @@
 
 #pragma once
 
+#include <cstdint>
+
 //#define USE_16_BIT_OFFSETS
 
 namespace OffsetAllocator
 {
-    typedef unsigned char uint8;
-    typedef unsigned short uint16;
-    typedef unsigned int uint32;
+    using uint8 = std::uint8_t;
+    using uint16 = std::uint16_t;
+    using uint32 = std::uint32_t;
 
     // 16 bit offsets mode will halve the metadata storage cost
     // But it only supports up to 65536 maximum allocation count
