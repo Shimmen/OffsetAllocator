@@ -4,8 +4,9 @@
 #pragma once
 
 #include <cstdint>
+#include <limits>
 
-//#define USE_16_BIT_OFFSETS
+//#define USE_16_BIT_NODE_INDICES
 
 namespace OffsetAllocator
 {
@@ -29,7 +30,7 @@ namespace OffsetAllocator
 
     struct Allocation
     {
-        static constexpr uint32 NO_SPACE = 0xffffffff;
+        static constexpr uint32 NO_SPACE = std::numeric_limits<NodeIndex>::max();
         
         uint32 offset = NO_SPACE;
         NodeIndex metadata = NO_SPACE; // internal: node index
