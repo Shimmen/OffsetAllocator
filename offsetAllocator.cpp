@@ -3,7 +3,7 @@
 
 #include "offsetAllocator.hpp"
 
-#ifdef DEBUG
+#ifndef NDEBUG
 #include <assert.h>
 #define ASSERT(x) assert(x)
 //#define DEBUG_VERBOSE
