@@ -63,7 +63,7 @@ namespace OffsetAllocator
     {
     public:
         Allocator(uint32 size, uint32 maxAllocs = 128 * 1024);
-        Allocator(Allocator &&other);
+        Allocator(Allocator &&other) noexcept;
         ~Allocator();
         void reset();
 
