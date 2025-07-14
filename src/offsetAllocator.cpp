@@ -153,8 +153,8 @@ namespace OffsetAllocator
         m_freeNodes(other.m_freeNodes),
         m_freeOffset(other.m_freeOffset)
     {
-        memcpy(m_usedBins, other.m_usedBins, sizeof(uint8) * NUM_TOP_BINS);
-        memcpy(m_binIndices, other.m_binIndices, sizeof(NodeIndex) * NUM_LEAF_BINS);
+        m_usedBins = std::move(other.m_usedBins);
+        m_binIndices = std::move(other.m_binIndices);
 
         other.m_nodes = nullptr;
         other.m_freeNodes = nullptr;

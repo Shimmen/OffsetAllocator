@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <limits>
 
@@ -95,8 +96,8 @@ namespace OffsetAllocator
         uint32 m_freeStorage;
 
         uint32 m_usedBinsTop;
-        uint8 m_usedBins[NUM_TOP_BINS];
-        NodeIndex m_binIndices[NUM_LEAF_BINS];
+        std::array<uint8, NUM_TOP_BINS> m_usedBins;
+        std::array<NodeIndex, NUM_LEAF_BINS> m_binIndices;
 
         Node* m_nodes;
         NodeIndex* m_freeNodes;
