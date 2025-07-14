@@ -74,14 +74,14 @@ namespace OffsetAllocator
 
         struct Node
         {
-            static constexpr NodeIndex unused = 0xffffffff;
+            static constexpr NodeIndex UNUSED = std::numeric_limits<NodeIndex>::max();
 
             uint32 dataOffset = 0;
             uint32 dataSize = 0;
-            NodeIndex binListPrev = unused;
-            NodeIndex binListNext = unused;
-            NodeIndex neighborPrev = unused;
-            NodeIndex neighborNext = unused;
+            NodeIndex binListPrev = UNUSED;
+            NodeIndex binListNext = UNUSED;
+            NodeIndex neighborPrev = UNUSED;
+            NodeIndex neighborNext = UNUSED;
             bool used = false; // TODO: Merge as bit flag
         };
 
