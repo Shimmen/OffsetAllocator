@@ -140,7 +140,7 @@ namespace OffsetAllocator
         m_nodes(nullptr),
         m_freeNodes(nullptr)
     {
-        if (sizeof(NodeIndex) == 2)
+        if constexpr (sizeof(NodeIndex) == 2)
         {
             ASSERT(maxAllocs <= 65536);
         }
