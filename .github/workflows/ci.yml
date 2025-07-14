@@ -26,7 +26,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
-        sudo apt-get install libcatch2-dev
+        sudo apt-get install -y catch2 || sudo apt-get install -y libcatch2-dev || echo "Catch2 not found in package manager, will use FetchContent"
 
     - name: Install Catch2 (macOS)
       if: runner.os == 'macOS'
@@ -58,7 +58,7 @@ jobs:
     - name: Install Catch2
       run: |
         sudo apt-get update
-        sudo apt-get install libcatch2-dev
+        sudo apt-get install -y catch2 || sudo apt-get install -y libcatch2-dev || echo "Catch2 not found in package manager, will use FetchContent"
 
     - name: Configure CMake with sanitizer
       run: |
@@ -95,7 +95,7 @@ jobs:
     - name: Install Catch2
       run: |
         sudo apt-get update
-        sudo apt-get install libcatch2-dev
+        sudo apt-get install -y catch2 || sudo apt-get install -y libcatch2-dev || echo "Catch2 not found in package manager, will use FetchContent"
 
     - name: Configure CMake
       run: |
