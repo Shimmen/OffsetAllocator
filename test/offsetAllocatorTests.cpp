@@ -12,7 +12,7 @@ namespace OffsetAllocator
     {
         extern uint32 uintToFloatRoundUp(uint32 size);
         extern uint32 uintToFloatRoundDown(uint32 size);
-    extern uint32 floatToUint(uint32 floatValue);
+        extern uint32 floatToUint(uint32 floatValue);
     }
 }
 
@@ -33,7 +33,7 @@ namespace offsetAllocatorTests
                 REQUIRE(i == roundUp);
                 REQUIRE(i == roundDown);
             }
-            
+
             // Test some random picked numbers
             struct NumberFloatUpDown
             {
@@ -41,7 +41,7 @@ namespace offsetAllocatorTests
                 uint32 up;
                 uint32 down;
             };
-            
+
             NumberFloatUpDown testData[] = {
                 {.number = 17, .up = 17, .down = 16},
                 {.number = 118, .up = 39, .down = 38},
@@ -50,7 +50,7 @@ namespace offsetAllocatorTests
                 {.number = 529445, .up = 137, .down = 136},
                 {.number = 1048575, .up = 144, .down = 143},
             };
-            
+
             for (uint32 i = 0; i < sizeof(testData) / sizeof(NumberFloatUpDown); i++)
             {
                 NumberFloatUpDown v = testData[i];
@@ -60,7 +60,7 @@ namespace offsetAllocatorTests
                 REQUIRE(roundDown == v.down);
             }
         }
-        
+
         SECTION("floatToUint")
         {
             // Denorms, exp=1 and exp=2 + mantissa = 0 are all precise.
@@ -72,7 +72,7 @@ namespace offsetAllocatorTests
                 uint32 v = OffsetAllocator::SmallFloat::floatToUint(i);
                 REQUIRE(i == v);
             }
-            
+
             // Test that float->uint->float conversion is precise for all numbers
             // NOTE: Test values < 240. 240->4G = overflows 32 bit integer
             for (uint32 i = 0; i < 240; i++)
@@ -106,7 +106,7 @@ namespace offsetAllocatorTests
             // Free merges neighbor empty nodes. Next allocation should also have offset = 0
             OffsetAllocator::Allocation a = allocator.allocate(0);
             REQUIRE(a.offset == 0);
-            
+
             OffsetAllocator::Allocation b = allocator.allocate(1);
             REQUIRE(b.offset == 0);
 
@@ -120,7 +120,7 @@ namespace offsetAllocatorTests
             allocator.free(b);
             allocator.free(c);
             allocator.free(d);
-            
+
             // End: Validate that allocator has no fragmentation left. Should be 100% clean.
             OffsetAllocator::Allocation validateAll = allocator.allocate(1024 * 1024 * 256);
             REQUIRE(validateAll.offset == 0);
@@ -133,11 +133,11 @@ namespace offsetAllocatorTests
             OffsetAllocator::Allocation a = allocator.allocate(1337);
             REQUIRE(a.offset == 0);
             allocator.free(a);
-            
+
             OffsetAllocator::Allocation b = allocator.allocate(1337);
             REQUIRE(b.offset == 0);
             allocator.free(b);
-            
+
             // End: Validate that allocator has no fragmentation left. Should be 100% clean.
             OffsetAllocator::Allocation validateAll = allocator.allocate(1024 * 1024 * 256);
             REQUIRE(validateAll.offset == 0);
@@ -154,13 +154,13 @@ namespace offsetAllocatorTests
             REQUIRE(b.offset == 1024);
 
             allocator.free(a);
-            
+
             OffsetAllocator::Allocation c = allocator.allocate(1024);
             REQUIRE(c.offset == 0);
 
             allocator.free(c);
             allocator.free(b);
-            
+
             // End: Validate that allocator has no fragmentation left. Should be 100% clean.
             OffsetAllocator::Allocation validateAll = allocator.allocate(1024 * 1024 * 256);
             REQUIRE(validateAll.offset == 0);
@@ -178,7 +178,7 @@ namespace offsetAllocatorTests
             REQUIRE(b.offset == 1024);
 
             allocator.free(a);
-            
+
             OffsetAllocator::Allocation c = allocator.allocate(2345);
             REQUIRE(c.offset == 1024 + 3456);
 
@@ -196,7 +196,7 @@ namespace offsetAllocatorTests
             allocator.free(d);
             allocator.free(b);
             allocator.free(e);
-            
+
             // End: Validate that allocator has no fragmentation left. Should be 100% clean.
             OffsetAllocator::Allocation validateAll = allocator.allocate(1024 * 1024 * 256);
             REQUIRE(validateAll.offset == 0);
@@ -246,7 +246,7 @@ namespace offsetAllocatorTests
                 if (i < 152 || i > 154)
                     allocator.free(allocations[i]);
             }
-            
+
             OffsetAllocator::StorageReport report2 = allocator.storageReport();
             REQUIRE(report2.totalFreeSpace == 1024 * 1024 * 256);
             REQUIRE(report2.largestFreeRegion == 1024 * 1024 * 256);

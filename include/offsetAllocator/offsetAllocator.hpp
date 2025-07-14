@@ -31,7 +31,7 @@ namespace OffsetAllocator
     struct Allocation
     {
         static constexpr uint32 NO_SPACE = std::numeric_limits<NodeIndex>::max();
-        
+
         uint32 offset = NO_SPACE;
         NodeIndex metadata = NO_SPACE; // internal: node index
     };
@@ -49,7 +49,7 @@ namespace OffsetAllocator
             uint32 size;
             uint32 count;
         };
-        
+
         Region freeRegions[NUM_LEAF_BINS];
     };
 
@@ -60,14 +60,14 @@ namespace OffsetAllocator
         Allocator(Allocator &&other);
         ~Allocator();
         void reset();
-        
+
         Allocation allocate(uint32 size);
         void free(Allocation allocation);
 
         uint32 allocationSize(Allocation allocation) const;
         StorageReport storageReport() const;
         StorageReportFull storageReportFull() const;
-        
+
     private:
         uint32 insertNodeIntoBin(uint32 size, uint32 dataOffset);
         void removeNodeFromBin(uint32 nodeIndex);
@@ -75,7 +75,7 @@ namespace OffsetAllocator
         struct Node
         {
             static constexpr NodeIndex unused = 0xffffffff;
-            
+
             uint32 dataOffset = 0;
             uint32 dataSize = 0;
             NodeIndex binListPrev = unused;
@@ -84,7 +84,7 @@ namespace OffsetAllocator
             NodeIndex neighborNext = unused;
             bool used = false; // TODO: Merge as bit flag
         };
-    
+
         uint32 m_size;
         uint32 m_maxAllocs;
         uint32 m_freeStorage;
@@ -92,7 +92,7 @@ namespace OffsetAllocator
         uint32 m_usedBinsTop;
         uint8 m_usedBins[NUM_TOP_BINS];
         NodeIndex m_binIndices[NUM_LEAF_BINS];
-                
+
         Node* m_nodes;
         NodeIndex* m_freeNodes;
         uint32 m_freeOffset;
