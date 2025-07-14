@@ -34,6 +34,11 @@ namespace OffsetAllocator
 
         uint32 offset = NO_SPACE;
         NodeIndex metadata = NO_SPACE; // internal: node index
+
+        bool isValid() const
+        {
+            return offset != NO_SPACE && metadata != NO_SPACE;
+        }
     };
 
     struct StorageReport
