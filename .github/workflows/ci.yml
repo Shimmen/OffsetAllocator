@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        build_type: [Debug, Release]
+
+    runs-on: ${{ matrix.os }}
+
+    name: ${{ matrix.os }}-${{ matrix.build_type }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+    - name: Build
+      run: cmake --build build --config ${{ matrix.build_type }} --parallel
+
+    - name: Test
+      working-directory: build
+      run: ctest --output-on-failure --parallel
+
+  # Sanitizer builds (Linux only)
+  sanitizers:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sanitizer: [address, undefined, thread]
+
+    name: sanitizer-${{ matrix.sanitizer }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure CMake with sanitizer
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_CXX_FLAGS="-fsanitize=${{ matrix.sanitizer }} -fno-omit-frame-pointer" \
+          -DCMAKE_C_FLAGS="-fsanitize=${{ matrix.sanitizer }} -fno-omit-frame-pointer"
+
+    - name: Build
+      run: cmake --build build --parallel
+
+    - name: Test
+      working-directory: build
+      run: ctest --output-on-failure --parallel
+      env:
+        # Increase memory for AddressSanitizer
+        ASAN_OPTIONS: detect_leaks=1:abort_on_error=1
+        # ThreadSanitizer options
+        TSAN_OPTIONS: halt_on_error=1
+        # UndefinedBehaviorSanitizer options  
+        UBSAN_OPTIONS: halt_on_error=1
+
+  # Static analysis with clang-tidy
+  static-analysis:
+    runs-on: ubuntu-latest
+    name: static-analysis
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Debug \
+          -DCMAKE_C_COMPILER=clang \
+          -DCMAKE_CXX_COMPILER=clang++ \
+          -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+    - name: Build
+      run: cmake --build build --parallel
+
+    - name: Run clang-tidy
+      run: |
+        clang-tidy src/*.cpp include/offsetAllocator/*.hpp \
+          -p build \
+          --warnings-as-errors='*' \
+          --header-filter='.*' || true  # Don't fail the build for now
