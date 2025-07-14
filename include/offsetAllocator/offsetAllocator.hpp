@@ -1,4 +1,5 @@
 // (C) Sebastian Aaltonen 2023
+// (C) Simon Moos 2025
 // MIT License (see file: LICENSE)
 
 #pragma once
