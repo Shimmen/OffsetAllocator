@@ -1,11 +1,14 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.10)
 
 project(offsetAllocator)
 
-set(SOURCE_FILES
-   offsetAllocator.cpp
-   offsetAllocator.hpp
-)
-
-add_library(${PROJECT_NAME} ${SOURCE_FILES})
+add_library(${PROJECT_NAME} offsetAllocator.cpp offsetAllocator.hpp)
 target_include_directories(${PROJECT_NAME} PUBLIC .)
+
+set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
+
+if(MSVC)
+   target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)
+else()
+   target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -pedantic -Werror)
+endif()
