@@ -1,10 +1,8 @@
 #include <catch2/catch_all.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include "gfxTestFixture.hpp"
+#include <cstdint>
 
-#include "offsetAllocator.hpp"
-
-using namespace f;
+#include <offsetAllocator/offsetAllocator.hpp>
 
 namespace OffsetAllocator
 {
@@ -25,11 +23,11 @@ namespace offsetAllocatorTests
             // Denorms, exp=1 and exp=2 + mantissa = 0 are all precise.
             // NOTE: Assuming 8 value (3 bit) mantissa.
             // If this test fails, please change this assumption!
-            uint32 preciseNumberCount = 17;
-            for (uint32 i = 0; i < preciseNumberCount; i++)
+            std::uint32_t preciseNumberCount = 17;
+            for (std::uint32_t i = 0; i < preciseNumberCount; i++)
             {
-                uint32 roundUp = OffsetAllocator::SmallFloat::uintToFloatRoundUp(i);
-                uint32 roundDown = OffsetAllocator::SmallFloat::uintToFloatRoundDown(i);
+                std::uint32_t roundUp = OffsetAllocator::SmallFloat::uintToFloatRoundUp(i);
+                std::uint32_t roundDown = OffsetAllocator::SmallFloat::uintToFloatRoundDown(i);
                 REQUIRE(i == roundUp);
                 REQUIRE(i == roundDown);
             }
@@ -37,9 +35,9 @@ namespace offsetAllocatorTests
             // Test some random picked numbers
             struct NumberFloatUpDown
             {
-                uint32 number;
-                uint32 up;
-                uint32 down;
+                std::uint32_t number;
+                std::uint32_t up;
+                std::uint32_t down;
             };
 
             NumberFloatUpDown testData[] = {
@@ -51,11 +49,11 @@ namespace offsetAllocatorTests
                 {.number = 1048575, .up = 144, .down = 143},
             };
 
-            for (uint32 i = 0; i < sizeof(testData) / sizeof(NumberFloatUpDown); i++)
+            for (std::uint32_t i = 0; i < sizeof(testData) / sizeof(NumberFloatUpDown); i++)
             {
                 NumberFloatUpDown v = testData[i];
-                uint32 roundUp = OffsetAllocator::SmallFloat::uintToFloatRoundUp(v.number);
-                uint32 roundDown = OffsetAllocator::SmallFloat::uintToFloatRoundDown(v.number);
+                std::uint32_t roundUp = OffsetAllocator::SmallFloat::uintToFloatRoundUp(v.number);
+                std::uint32_t roundDown = OffsetAllocator::SmallFloat::uintToFloatRoundDown(v.number);
                 REQUIRE(roundUp == v.up);
                 REQUIRE(roundDown == v.down);
             }
@@ -66,20 +64,20 @@ namespace offsetAllocatorTests
             // Denorms, exp=1 and exp=2 + mantissa = 0 are all precise.
             // NOTE: Assuming 8 value (3 bit) mantissa.
             // If this test fails, please change this assumption!
-            uint32 preciseNumberCount = 17;
-            for (uint32 i = 0; i < preciseNumberCount; i++)
+            std::uint32_t preciseNumberCount = 17;
+            for (std::uint32_t i = 0; i < preciseNumberCount; i++)
             {
-                uint32 v = OffsetAllocator::SmallFloat::floatToUint(i);
+                std::uint32_t v = OffsetAllocator::SmallFloat::floatToUint(i);
                 REQUIRE(i == v);
             }
 
             // Test that float->uint->float conversion is precise for all numbers
             // NOTE: Test values < 240. 240->4G = overflows 32 bit integer
-            for (uint32 i = 0; i < 240; i++)
+            for (std::uint32_t i = 0; i < 240; i++)
             {
-                uint32 v = OffsetAllocator::SmallFloat::floatToUint(i);
-                uint32 roundUp = OffsetAllocator::SmallFloat::uintToFloatRoundUp(v);
-                uint32 roundDown = OffsetAllocator::SmallFloat::uintToFloatRoundDown(v);
+                std::uint32_t v = OffsetAllocator::SmallFloat::floatToUint(i);
+                std::uint32_t roundUp = OffsetAllocator::SmallFloat::uintToFloatRoundUp(v);
+                std::uint32_t roundDown = OffsetAllocator::SmallFloat::uintToFloatRoundDown(v);
                 REQUIRE(i == roundUp);
                 REQUIRE(i == roundDown);
                 //if ((i%8) == 0) printf("\n");
@@ -92,7 +90,7 @@ namespace offsetAllocatorTests
     {
         OffsetAllocator::Allocator allocator(1024 * 1024 * 256);
         OffsetAllocator::Allocation a = allocator.allocate(1337);
-        uint32 offset = a.offset;
+        std::uint32_t offset = a.offset;
         REQUIRE(offset == 0);
         allocator.free(a);
     }
@@ -208,7 +206,7 @@ namespace offsetAllocatorTests
             // Allocate 256x 1MB. Should fit. Then free four random slots and reallocate four slots.
             // Plus free four contiguous slots an allocate 4x larger slot. All must be zero fragmentation!
             OffsetAllocator::Allocation allocations[256];
-            for (uint i = 0; i < 256; i++)
+            for (std::uint32_t i = 0; i < 256; i++)
             {
                 allocations[i] = allocator.allocate(1024 * 1024);
                 REQUIRE(allocations[i].offset == i * 1024 * 1024);
@@ -241,7 +239,7 @@ namespace offsetAllocatorTests
             REQUIRE(allocations[95].offset != OffsetAllocator::Allocation::NO_SPACE);
             REQUIRE(allocations[151].offset != OffsetAllocator::Allocation::NO_SPACE);
 
-            for (uint i = 0; i < 256; i++)
+            for (std::uint32_t i = 0; i < 256; i++)
             {
                 if (i < 152 || i > 154)
                     allocator.free(allocations[i]);
