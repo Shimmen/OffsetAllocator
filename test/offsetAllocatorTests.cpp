@@ -254,5 +254,22 @@ namespace offsetAllocatorTests
             REQUIRE(validateAll.offset == 0);
             allocator.free(validateAll);
         }
+
+        SECTION("limited allocations")
+        {
+            OffsetAllocator::Allocator limitedAllocator(36864, 2);
+
+            OffsetAllocator::Allocation a = limitedAllocator.allocate(32);
+            REQUIRE(a.isValid());
+
+            OffsetAllocator::Allocation b = limitedAllocator.allocate(32);
+            REQUIRE(b.isValid());
+
+            OffsetAllocator::Allocation c = limitedAllocator.allocate(32);
+            REQUIRE(!c.isValid());
+
+            limitedAllocator.free(a);
+            limitedAllocator.free(b);
+        }
     }
 }
