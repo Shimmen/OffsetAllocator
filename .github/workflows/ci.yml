@@ -22,6 +22,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v4
 
+    - name: Install Catch2 (Ubuntu)
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install libcatch2-dev
+
+    - name: Install Catch2 (macOS)
+      if: runner.os == 'macOS'
+      run: brew install catch2
+
     - name: Configure CMake
       run: cmake -B build -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
 
@@ -44,6 +54,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Install Catch2
+      run: |
+        sudo apt-get update
+        sudo apt-get install libcatch2-dev
 
     - name: Configure CMake with sanitizer
       run: |
@@ -76,6 +91,11 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Install Catch2
+      run: |
+        sudo apt-get update
+        sudo apt-get install libcatch2-dev
 
     - name: Configure CMake
       run: |
