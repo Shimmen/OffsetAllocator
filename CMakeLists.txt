@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 project(offsetAllocator)
 
-add_library(${PROJECT_NAME} offsetAllocator.cpp offsetAllocator.hpp)
-target_include_directories(${PROJECT_NAME} PUBLIC .)
+add_library(${PROJECT_NAME} src/offsetAllocator.cpp include/offsetAllocator/offsetAllocator.hpp)
+target_include_directories(${PROJECT_NAME} PUBLIC include/)
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
 
